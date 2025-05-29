@@ -1,29 +1,30 @@
-cmake_minimum_required(VERSION 3.10)
-project(SRT_subtitles)
+cmake_minimum_required(VERSION 3.14)
+project(SubtitleTool)
 
 set(CMAKE_CXX_STANDARD 17)
 
-# Main executable
-add_executable(SRT_subtitles
-    Time.cpp 
-    Subtitle.cpp 
-    SubtitleParser.cpp 
-    SubtitleProcessor.cpp 
-    main.cpp
-)
+option(BUILD_TESTS "Build tests" OFF)
 
-# Test executable
-add_executable(SRT_tests
+add_executable(runApp
+    main.cpp
     Time.cpp
     Subtitle.cpp
     SubtitleParser.cpp
     SubtitleProcessor.cpp
-    SRT_tests.cpp
 )
 
-# Find GTest
-find_package(GTest REQUIRED)
-target_link_libraries(SRT_tests GTest::GTest GTest::Main)
-
-enable_testing()
-add_test(NAME SRT_tests COMMAND SRT_tests)
+if(BUILD_TESTS)
+    find_package(GTest REQUIRED)
+    add_executable(runUnitTests
+        test_main.cpp
+        TimeTest.cpp
+        SubtitleTest.cpp
+        SubtitleParserTest.cpp
+        SubtitleProcessorTest.cpp
+        Time.cpp
+        Subtitle.cpp
+        SubtitleParser.cpp
+        SubtitleProcessor.cpp
+    )
+    target_link_libraries(runUnitTests GTest::GTest GTest::Main)
+endif()
